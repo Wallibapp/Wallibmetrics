@@ -16,13 +16,13 @@ export default async function handler(req, res) {
 
   const url = new URL(`https://mixpanel.com/api/2.0/${ep}`);
   Object.entries(params).forEach(([k, v]) => {
-  if (k === 'event') {
-    try { url.searchParams.set(k, JSON.parse(v)); } 
-    catch { url.searchParams.set(k, v); }
-  } else {
-    url.searchParams.set(k, v);
-  }
-});
+    if (k === 'event') {
+      try { url.searchParams.set(k, JSON.parse(v)); }
+      catch { url.searchParams.set(k, v); }
+    } else {
+      url.searchParams.set(k, v);
+    }
+  });
 
   try {
     const r = await fetch(url.toString(), {
