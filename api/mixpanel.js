@@ -15,7 +15,14 @@ export default async function handler(req, res) {
   if (!allowed.includes(ep)) { res.status(400).json({ error: 'Endpoint not allowed' }); return; }
 
   const url = new URL(`https://mixpanel.com/api/2.0/${ep}`);
-  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  Object.entries(params).forEach(([k, v]) => {
+  if (k === 'event') {
+    try { url.searchParams.set(k, JSON.parse(v)); } 
+    catch { url.searchParams.set(k, v); }
+  } else {
+    url.searchParams.set(k, v);
+  }
+});
 
   try {
     const r = await fetch(url.toString(), {
